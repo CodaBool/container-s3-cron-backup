@@ -37,7 +37,7 @@ docker run \
   peterrus/s3-cron-backup
 ```
 
-## It doesn't do X or Y!
+## It doesn't do X!
 
 Let this container serve as a starting point and an inspiration! Feel free to modify it and even open a PR if you feel others can benefit from these changes.
 
