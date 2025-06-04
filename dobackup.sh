@@ -24,10 +24,10 @@ else
   AWS_ARGS="--endpoint-url ${S3_ENDPOINT}"
 fi
 
-echo "creating archive with progress"
+echo "archiving folders: ${TARGET}\n"
 tar -zcf "${FILE_NAME}" ${TARGET} \
-  --checkpoint=100 \
-  --checkpoint-action="echo=Progress: checkpoint %u"
+  --checkpoint=800000 \
+  --checkpoint-action="echo=%T"
 
 echo "uploading archive to S3 [${FILE_NAME}, storage class - ${S3_STORAGE_CLASS}]"
 aws s3 ${AWS_ARGS} cp --storage-class "${S3_STORAGE_CLASS}" "${FILE_NAME}" "${S3_BUCKET_URL}"
