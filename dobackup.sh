@@ -25,7 +25,7 @@ else
 fi
 
 echo "creating archive"
-tar -zcf "${FILE_NAME}" -v --checkpoint=.500 --checkpoint-action=echo='Adding %u' ${TARGET}
+tar -zcf "${FILE_NAME}" --checkpoint=500 ${TARGET}
 echo "uploading archive to S3 [${FILE_NAME}, storage class - ${S3_STORAGE_CLASS}]"
 aws s3 ${AWS_ARGS} cp --storage-class "${S3_STORAGE_CLASS}" "${FILE_NAME}" "${S3_BUCKET_URL}"
 echo "removing local archive"
