@@ -3,7 +3,7 @@
 set -e
 
 cat << EOF > /home/backup/.env
-export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-1}
 export BACKUP_NAME=${BACKUP_NAME}
 export TARGET="${TARGET}"
 export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
