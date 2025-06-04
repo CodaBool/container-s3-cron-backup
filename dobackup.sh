@@ -24,11 +24,12 @@ else
 fi
 
 echo -e "archiving folders: ${TARGET}\n"
+# 800000 is arbitrary, lower to have more checkpoints
 tar -zcf "${FILE_NAME}" ${TARGET} \
   --checkpoint=800000 \
   --checkpoint-action="echo=%T"
 
-echo "uploading archive to S3 [${FILE_NAME}, storage class - ${S3_STORAGE_CLASS}]"
+echo -e "\nuploading to S3 [${FILE_NAME}, class - ${S3_STORAGE_CLASS}]"
 aws s3 ${AWS_ARGS} cp --storage-class "${S3_STORAGE_CLASS}" "${FILE_NAME}" "${S3_BUCKET_URL}"
 echo "removing local archive"
 rm "${FILE_NAME}"

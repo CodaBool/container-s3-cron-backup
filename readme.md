@@ -10,15 +10,15 @@ I have that resolved in my fork.
 ## Variables
 The container is configured via a set of required environment variables:
 - `AWS_ACCESS_KEY_ID`: Get this from Amazon IAM
-- `AWS_SECRET_ACCESS_KEY`: Get this from Amazon IAM, **you should keep this a secret**
+- `AWS_SECRET_ACCESS_KEY`: Get this from Amazon IAM
 - `S3_BUCKET_URL`: in most cases this should be `s3://name-of-your-bucket/`
-- `AWS_DEFAULT_REGION`: The AWS region your bucket resides in
+- `AWS_DEFAULT_REGION`: The AWS region your bucket resides in (defaults to us-east-1)
 - `CRON_SCHEDULE`: Check out [crontab.guru](https://crontab.guru/) for some examples:
-- `BACKUP_NAME`: A name to identify your backup among the other files in your bucket, it will be postfixed with the current timestamp (date and time)
+- `BACKUP_NAME`: A name to identify your backup among the other files in your bucket, it will be postfixed with the current timestamp (date and time, defaults to backup)
 
 And the following optional environment variables:
 - `S3_ENDPOINT`: (Optional, defaults to whatever aws-cli provides) configurable S3 endpoint URL for non-Amazon services (e.g. [Wasabi](https://wasabi.com/) or [Minio](https://min.io/))
-- `S3_STORAGE_CLASS`: (Optional, defaults to `STANDARD`) S3 storage class, see [aws cli documentation](https://docs.aws.amazon.com/cli/latest/reference/s3/cp.html) for options
+- `S3_STORAGE_CLASS`: (Optional, defaults to `GLACIER`) S3 storage class, see [aws cli documentation](https://docs.aws.amazon.com/cli/latest/reference/s3/cp.html) for options
 - `TARGET`: (Optional, defaults to `/data`) Specifies the target location to backup. Useful for sidecar containers and to filter files.
   - Example with multiple targets: `TARGET="/var/log/*.log /var/lib/mysql/*.dmp"` (Arguments will be passed to `tar`).
 - `WEBHOOK_URL`: (Optional) URL to ping after successful backup, e.g. [StatusCake push monitoring](https://www.statuscake.com/kb/knowledge-base/what-is-push-monitoring/) or [healthchecks.io](https://healthchecks.io)
@@ -27,8 +27,8 @@ And the following optional environment variables:
 ### Directly via Docker
 ```
 docker run \
-  -e AWS_ACCESS_KEY_ID=SOME8AWS3ACCESS9KEY \
-  -e AWS_SECRET_ACCESS_KEY=sUp3rS3cr3tK3y0fgr34ts3cr3cy \
+  -e AWS_ACCESS_KEY_ID=*** \
+  -e AWS_SECRET_ACCESS_KEY=*** \
   -e S3_BUCKET_URL=s3://name-of-your-bucket/ \
   -e AWS_DEFAULT_REGION=your-aws-region \
   -e CRON_SCHEDULE="0 * * * *" \
