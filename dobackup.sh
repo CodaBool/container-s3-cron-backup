@@ -39,3 +39,19 @@ if [ -n "${WEBHOOK_URL}" ]; then
     echo "notifying webhook"
     curl -m 10 --retry 5 "${WEBHOOK_URL}"
 fi
+
+echo "checking existing backups in S3..."
+BACKUP_OBJECTS=$(aws s3 ${AWS_ARGS} ls "${S3_BUCKET_URL}" | sort | awk '{print $4}')
+OBJECT_COUNT=$(echo "$BACKUP_OBJECTS" | wc -l)
+
+if [ "$OBJECT_COUNT" -gt 7 ]; then
+    NUM_TO_DELETE=$(($OBJECT_COUNT - 7))
+    echo "too many backups ($OBJECT_COUNT), deleting $NUM_TO_DELETE oldest..."
+
+    echo "$BACKUP_OBJECTS" | head -n $NUM_TO_DELETE | while read -r obj; do
+        echo "deleting $obj"
+        aws s3 ${AWS_ARGS} rm "${S3_BUCKET_URL}${obj}"
+    done
+else
+    echo "backup count ($OBJECT_COUNT) is within limit"
+fi
