@@ -26,6 +26,7 @@ fi
 echo -e "archiving folders: ${TARGET}\n"
 # 800000 is arbitrary, lower to have more checkpoints
 tar -zcf "${FILE_NAME}" ${TARGET} \
+  --ignore-failed-read \
   --checkpoint=800000 \
   --checkpoint-action="echo=%T"
 
