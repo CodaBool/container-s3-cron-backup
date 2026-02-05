@@ -30,10 +30,13 @@ tar -zcf "${FILE_NAME}" ${TARGET} \
 echo -e "\nuploading to R2 [${FILE_NAME}, class - ${R2_STORAGE_CLASS}]"
 
 echo -e "\n DEBUG = args ${AWS_ARGS} | storage = ${R2_STORAGE_CLASS} \n file = ${FILE_NAME} | bucket = ${R2_BUCKET_URL}"
-aws s3 ${AWS_ARGS} --endpoint-url ${R2_BUCKET_URL} cp \
+# "./localfile.zip" "s3://my-bucket/backups/localfile.zip"
+
+aws s3 ${AWS_ARGS} --endpoint-url ${R2_BUCKET_URL} \
   --storage-class "${R2_STORAGE_CLASS}" \
+  cp \
   "${FILE_NAME}" \
-  "${BUCKET}"
+  "s3://${BUCKET}"
 
 echo "removing local archive"
 rm "${FILE_NAME}"
@@ -46,7 +49,7 @@ fi
 
 echo "checking existing backups..."
 BACKUP_OBJECTS=$(
-  aws s3 ${AWS_ARGS} --endpoint-url ${R2_BUCKET_URL} ls "${BUCKET}" |
+  aws s3 ${AWS_ARGS} --endpoint-url ${R2_BUCKET_URL} ls "s3://${BUCKET}" |
     awk '{print $4}' |
     grep -v '^$' |
     sort
