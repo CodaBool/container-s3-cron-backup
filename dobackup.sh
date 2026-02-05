@@ -20,12 +20,6 @@ if [ -n "${R2_ENDPOINT}" ]; then
   AWS_ARGS="--endpoint-url ${R2_ENDPOINT}"
 fi
 
-# Ensure bucket url ends with / for later concatenation
-BUCKET_URL="${R2_BUCKET_URL}"
-case "$BUCKET_URL" in
-  */) : ;;
-  *) BUCKET_URL="${BUCKET_URL}/" ;;
-esac
 
 echo -e "archiving folders: ${TARGET}\n"
 tar -zcf "${FILE_NAME}" ${TARGET} \
@@ -35,11 +29,11 @@ tar -zcf "${FILE_NAME}" ${TARGET} \
 
 echo -e "\nuploading to R2 [${FILE_NAME}, class - ${R2_STORAGE_CLASS}]"
 
-echo -e "\n DEBUG = args ${AWS_ARGS} | storage = ${R2_STORAGE_CLASS} \n file = ${FILE_NAME} | bucket = ${BUCKET_URL}"
-aws s3 ${AWS_ARGS} cp \
+echo -e "\n DEBUG = args ${AWS_ARGS} | storage = ${R2_STORAGE_CLASS} \n file = ${FILE_NAME} | bucket = ${R2_BUCKET_URL}"
+aws s3 ${AWS_ARGS} --endpoint-url ${R2_BUCKET_URL} cp \
   --storage-class "${R2_STORAGE_CLASS}" \
   "${FILE_NAME}" \
-  "${BUCKET_URL}"
+  "${BUCKET}"
 
 echo "removing local archive"
 rm "${FILE_NAME}"
@@ -52,7 +46,7 @@ fi
 
 echo "checking existing backups..."
 BACKUP_OBJECTS=$(
-  aws s3 ${AWS_ARGS} ls "${BUCKET_URL}" |
+  aws s3 ${AWS_ARGS} --endpoint-url ${R2_BUCKET_URL} ls "${BUCKET}" |
     awk '{print $4}' |
     grep -v '^$' |
     sort
