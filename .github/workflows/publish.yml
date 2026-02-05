@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # https://github.com/marketplace/actions/checkout
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       # https://github.com/marketplace/actions/docker-setup-docker
       - uses: docker/setup-docker-action@v4
       # login to github, build and push image
