@@ -4,7 +4,6 @@ set -e
 # alpine /bin/sh doesn't guarantee "source" in all shells; "." is POSIX
 . /home/backup/.env
 
-R2_STORAGE_CLASS=${R2_STORAGE_CLASS:-STANDARD_IA}
 NAME=${BACKUP_NAME:-backup}
 KEEP_LAST=${KEEP_LAST:-7}
 
@@ -27,13 +26,9 @@ tar -zcf "${FILE_NAME}" ${TARGET} \
   --checkpoint=800000 \
   --checkpoint-action="echo=%T"
 
-echo -e "\nuploading to R2 [${FILE_NAME}, class - ${R2_STORAGE_CLASS}]"
-
-echo -e "\n DEBUG = args ${AWS_ARGS} | storage = ${R2_STORAGE_CLASS} \n file = ${FILE_NAME} | bucket = ${R2_BUCKET_URL}"
-# "./localfile.zip" "s3://my-bucket/backups/localfile.zip"
+echo -e "\nuploading to R2 [${FILE_NAME}]"
 
 aws s3 ${AWS_ARGS} --endpoint-url ${R2_BUCKET_URL} \
-  --storage-class "${R2_STORAGE_CLASS}" \
   cp \
   "${FILE_NAME}" \
   "s3://${BUCKET}"
