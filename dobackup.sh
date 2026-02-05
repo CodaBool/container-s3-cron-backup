@@ -34,6 +34,8 @@ tar -zcf "${FILE_NAME}" ${TARGET} \
   --checkpoint-action="echo=%T"
 
 echo -e "\nuploading to R2 [${FILE_NAME}, class - ${R2_STORAGE_CLASS}]"
+
+echo -e "\n DEBUG = args ${AWS_ARGS} | storage = ${R2_STORAGE_CLASS} \n file = ${FILE_NAME} | bucket = ${BUCKET_URL}"
 aws s3 ${AWS_ARGS} cp \
   --storage-class "${R2_STORAGE_CLASS}" \
   "${FILE_NAME}" \
