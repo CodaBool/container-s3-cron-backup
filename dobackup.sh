@@ -28,10 +28,7 @@ tar -zcf "${FILE_NAME}" ${TARGET} \
 
 echo -e "\nuploading to R2 [${FILE_NAME}]"
 
-aws s3 ${AWS_ARGS} --endpoint-url ${R2_BUCKET_URL} \
-  cp \
-  "${FILE_NAME}" \
-  "s3://${BUCKET}"
+aws s3 --endpoint-url ${R2_BUCKET_URL} cp "${FILE_NAME}" "s3://${BUCKET}"
 
 echo "removing local archive"
 rm "${FILE_NAME}"
@@ -53,7 +50,7 @@ aws s3 --endpoint-url "$R2_BUCKET_URL" ls "s3://$BUCKET/"
 
 echo "checking existing backups..."
 BACKUP_OBJECTS="$(
-  aws s3 --endpoint-url $R2_BUCKET_URL ls "s3://${BUCKET}/" |
+  aws s3 --endpoint-url ${R2_BUCKET_URL} ls "s3://${BUCKET}/" |
     awk '{print $4}' |
     grep -v '^$' |
     sort
