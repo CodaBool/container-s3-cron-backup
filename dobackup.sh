@@ -42,6 +42,10 @@ if [ -n "${WEBHOOK_URL}" ]; then
   curl -m 10 --retry 5 "${WEBHOOK_URL}"
 fi
 
+echo "R2_ENDPOINT=$R2_ENDPOINT"
+echo "R2_BUCKET_URL=$R2_BUCKET_URL"
+echo "BUCKET=$BUCKET"
+
 echo "SANITY CHECK: $R2_ENDPOINT"
 aws s3 --endpoint-url "$R2_BUCKET_URL" ls
 aws s3 --endpoint-url "$R2_BUCKET_URL" ls "s3://$BUCKET/"
