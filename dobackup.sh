@@ -42,6 +42,11 @@ if [ -n "${WEBHOOK_URL}" ]; then
   curl -m 10 --retry 5 "${WEBHOOK_URL}"
 fi
 
+echo "SANITY CHECK: $R2_ENDPOINT"
+aws s3 --endpoint-url "$R2_BUCKET_URL" ls
+aws s3 --endpoint-url "$R2_BUCKET_URL" ls "s3://$BUCKET/"
+
+
 echo "checking existing backups..."
 BACKUP_OBJECTS="$(
   aws s3 --endpoint-url $R2_BUCKET_URL ls "s3://${BUCKET}/" |
@@ -60,7 +65,7 @@ if [ "$OBJECT_COUNT" -gt "$KEEP_LAST" ]; then
   printf "%s\n" "$BACKUP_OBJECTS" | head -n "$NUM_TO_DELETE" | while read -r obj; do
     [ -z "$obj" ] && continue
     echo "deleting $obj"
-    aws s3 ${AWS_ARGS} rm "${BUCKET_URL}${obj}"
+    aws s3 ${AWS_ARGS} rm "${R2_BUCKET_URL}${obj}"
   done
 else
   echo "backup count ($OBJECT_COUNT) is within limit"
