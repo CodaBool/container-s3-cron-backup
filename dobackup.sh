@@ -43,14 +43,15 @@ if [ -n "${WEBHOOK_URL}" ]; then
 fi
 
 echo "checking existing backups..."
-BACKUP_OBJECTS=$(
-  aws s3 ${AWS_ARGS} --endpoint-url ${R2_BUCKET_URL} ls "s3://${BUCKET}" |
+BACKUP_OBJECTS="$(
+  aws s3 --endpoint-url $R2_BUCKET_URL ls "s3://${BUCKET}/" |
     awk '{print $4}' |
     grep -v '^$' |
     sort
-)
+)"
 
-OBJECT_COUNT=$(printf "%s\n" "$BACKUP_OBJECTS" | grep -c '.*' || true)
+OBJECT_COUNT="$(printf "%s\n" "$BACKUP_OBJECTS" | grep -c '.*' || true)"
+
 
 if [ "$OBJECT_COUNT" -gt "$KEEP_LAST" ]; then
   NUM_TO_DELETE=$((OBJECT_COUNT - KEEP_LAST))
